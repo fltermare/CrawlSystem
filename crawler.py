@@ -22,17 +22,40 @@ def get_url_list(num: int) -> List[str]:
     return res
 
 
-# def get_content(url, timeout):
-    # time.sleep(1)
-    # curr_time = datetime.now()
-    # data = "data_" + url
-    # meta = "meta_" + url
+# def get_random_string(length):
+#     letters = string.ascii_lowercase
+#     result_str = ''.join(random.choice(letters) for i in range(length))
+#     # print("Random string of length", length, "is:", result_str)
+#     return result_str
 
-    # print(curr_time, data, meta)
-    # push.delay(url)
-    # print(r.task_id)
 
-    # return data, meta
+# def get_content(urls, timeout):
+
+#     data = []
+#     # crawling
+#     for url in urls:
+#         time.sleep(1)
+#         data = "data_%s_%s" % (url, get_random_string(10))
+#         meta = "meta_%s_%s" % (url, get_random_string(10))
+
+#         # packing
+#         crawl_time = datetime.now()
+#         index = "index-" + crawl_time.strftime("%Y-%m-%d")
+#         url_data = {
+#             "_index": index,
+#             "crawling time": str(crawl_time),
+#             "url": url,
+#             "content": data,
+#             "metadata": meta,
+#         }
+#         data.append(url_data)
+
+
+#     # print(curr_time, data, meta)
+#     push.delay(data)
+#     print(r.task_id)
+
+#     return data, meta
     # with urllib.request.urlopen(url, timeout=timeout) as conn:
     #     data = conn.read()
     #     soup = BeautifulSoup(data, 'html.parser')
@@ -41,6 +64,7 @@ def get_url_list(num: int) -> List[str]:
 
 
 def submit_tasks(url_list: List[str]) -> None:
+
     for url in url_list:
         crawl.delay(url)
     # with ThreadPoolExecutor(max_workers=5) as executor:

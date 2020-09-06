@@ -1,3 +1,4 @@
 celery==4.1.0
 SQLAlchemy
 kombu==4.1.0
+elasticsearch>=7.0.0,<8.0.0
