@@ -1,5 +1,4 @@
 from datetime import timedelta
-
 from celery.schedules import crontab
 
 # Timezone
@@ -22,7 +21,7 @@ beat_schedule = {
     # },
     'specified-time': {
         'task': 'celery_app.tasks.cleanup',
-        'schedule': crontab(hour=12, minute=0),
-        # 'args': (50, 50)
+        'schedule': crontab(hour=15, minute=0),
+        # 'schedule': timedelta(seconds=60),
     }
 }

@@ -22,7 +22,7 @@ def push_crawl_data(data):
 @app.task
 def cleanup():
     curr = datetime.now()
-    removed_day = curr - timedelta(days=0)
+    removed_day = curr - timedelta(days=30)
     index = "index-" + removed_day.strftime("%Y-%m-%d")
     es = Elasticsearch(['http://elastic:changeme@elasticsearch:9200'])
     es.indices.delete(index=index, ignore=[400, 404])

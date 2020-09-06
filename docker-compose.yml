@@ -22,6 +22,18 @@ services:
       - .:/celery_app
     depends_on:
       - rabbitmq
+      - elasticsearch
+    networks:
+      - elk
+
+  cleanup:
+    image: crawlersystem_app:latest
+    command: bash -c "celery -A celery_app beat"
+    restart: always
+    volumes:
+      - .:/celery_app
+    depends_on:
+      - app
     networks:
       - elk
 
