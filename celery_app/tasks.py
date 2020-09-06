@@ -1,6 +1,4 @@
 import time
-import random
-import string
 from celery import chain
 from celery_app import app
 from datetime import datetime, timedelta
@@ -11,33 +9,14 @@ from elasticsearch import Elasticsearch, helpers
 #     return x + y
 
 
-def get_random_string(length):
-    letters = string.ascii_lowercase
-    result_str = ''.join(random.choice(letters) for i in range(length))
-    # print("Random string of length", length, "is:", result_str)
-    return result_str
-
-
 @app.task(ignore_result=True)
-def crawl(url):
-    # crawling
+def push_crawl_data(data):
     time.sleep(1)
-    data = "data_%s_%s" % (url, get_random_string(10))
-    meta = "meta_%s_%s" % (url, get_random_string(10))
-
-    # packing
-    crawl_time = datetime.now()
-    index = "index-" + crawl_time.strftime("%Y-%m-%d")
-    data = {"crawling time": str(crawl_time),
-            "url": url,
-            "content": data,
-            "metadata": meta,
-            }
-
     es = Elasticsearch(['http://elastic:changeme@elasticsearch:9200'])
-    res = es.index(index=index, body=data)
+    # res = es.index(index=index, body=data)
+    helpers.bulk(es, data)
 
-    return len(meta), len(data), url
+    return len(data)
 
 
 @app.task
@@ -49,10 +28,6 @@ def cleanup():
     es.indices.delete(index=index, ignore=[400, 404])
     return 
 
-
-'''
-ref. http://docs.celeryq.org/en/latest/userguide/tasks.html#avoid-launching-synchronous-subtasks
-'''
 
 
 # def chain_demo(x, y):
