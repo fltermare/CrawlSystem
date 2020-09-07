@@ -15,23 +15,37 @@ services:
       - elk
 
   celery_worker:
-    build: .
-    command: bash -c "celery -A celery_app worker -l info --concurrency=30"
+    build:
+      context: celery_app/
+    command: bash -c "celery -A celery_app.main worker -l info --concurrency=30"
     restart: always
-    volumes:
-      - .:/celery_app
     depends_on:
       - rabbitmq
       - elasticsearch
     networks:
       - elk
 
-  cleanup:
+  celery_producer:
     image: crawlersystem_celery_worker:latest
-    command: bash -c "celery -A celery_app beat"
+    tty: true
     restart: always
     volumes:
-      - .:/celery_app
+      - type: bind
+        source: ./celery_app/crawler.py
+        target: /app/crawler.py
+    depends_on:
+      - celery_worker
+    networks:
+      - elk
+
+  cleanup:
+    image: crawlersystem_celery_worker:latest
+    command: bash -c "celery -A celery_app.main beat"
+    restart: always
+    volumes:
+      - type: bind
+        source: results.sqlite
+        target: /app/results.sqlite
     depends_on:
       - celery_worker
     networks:

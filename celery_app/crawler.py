@@ -76,7 +76,7 @@ def submit_tasks(url_list: List[str]) -> None:
     URL_per_CHUNK = 50
     for i, urls in enumerate(chunks(url_list, URL_per_CHUNK)):
         if i > 0 and i % 100 == 0:
-            time.sleep(URL_per_CHUNK - 5)
+            time.sleep(URL_per_CHUNK)
         crawl_chain.delay(urls)
 
 

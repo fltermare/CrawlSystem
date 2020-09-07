@@ -1,6 +1,6 @@
 import time
 from celery import chain
-from celery_app import app
+from .main import app
 from datetime import datetime, timedelta
 from elasticsearch import Elasticsearch, helpers
 import string
@@ -17,7 +17,7 @@ def get_random_string(length):
 
 @app.task(ignore_result=True)
 def crawl_chain(urls):
-    # add_demo ->  mul_demo -> insert_db_demo
+    # crawl_url ->  push_data
     chain(crawl_url.s(urls), push_data.s())()
 
 
