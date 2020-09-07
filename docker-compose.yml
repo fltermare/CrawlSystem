@@ -44,8 +44,8 @@ services:
     restart: always
     volumes:
       - type: bind
-        source: results.sqlite
-        target: /app/results.sqlite
+        source: .
+        target: /app/
     depends_on:
       - celery_worker
     networks:
