@@ -6,7 +6,7 @@ from celery_app.tasks import crawl_chain, crawl_url
 
 
 def get_url_list(num: int) -> List[str]:
-    res = [str(i) + ".com" for i in range(num)]
+    res = ["{}.com/{}/{}".format(i, i+1, i+2) for i in range(num)]
     return res
 
 
