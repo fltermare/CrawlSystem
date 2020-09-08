@@ -14,9 +14,9 @@ services:
     networks:
       - elk
 
-  celery_worker:
+  worker:
     build:
-      context: celery_app/
+      context: crawler/
     command: bash -c "celery -A celery_app.main worker -l info --concurrency=30"
     restart: always
     depends_on:
@@ -25,29 +25,32 @@ services:
     networks:
       - elk
 
-  celery_producer:
-    image: crawlersystem_celery_worker:latest
+  producer:
+    image: crawlersystem_worker:latest
     tty: true
     restart: always
     volumes:
       - type: bind
-        source: ./celery_app/crawler.py
+        source: ./crawler/crawler.py
         target: /app/crawler.py
+      - type: bind
+        source: ./query.py
+        target: /app/query.py
     depends_on:
-      - celery_worker
+      - worker
     networks:
       - elk
 
   cleanup:
-    image: crawlersystem_celery_worker:latest
+    image: crawlersystem_worker:latest
     command: bash -c "celery -A celery_app.main beat"
     restart: always
-    volumes:
-      - type: bind
-        source: .
-        target: /app/
+    # volumes:
+    #   - type: bind
+    #     source: .
+    #     target: /app/
     depends_on:
-      - celery_worker
+      - worker
     networks:
       - elk
 

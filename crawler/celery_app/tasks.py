@@ -1,6 +1,6 @@
 import time
 from celery import chain
-from .main import app
+from celery_app.main import app
 from datetime import datetime, timedelta
 from elasticsearch import Elasticsearch, helpers
 import string
@@ -37,7 +37,7 @@ def crawl_url(urls):
         # packing
         crawl_time = datetime.now()
         index = "index-" + crawl_time.strftime("%Y-%m-%d")
-        url_data = {
+        page_data = {
             "_index": index,
             "_source": {
                 "timestamp": crawl_time,
@@ -47,7 +47,7 @@ def crawl_url(urls):
                 "domain": ".".join([ext.domain, ext.suffix]),
             },
         }
-        data.append(url_data)
+        data.append(page_data)
 
     # time.sleep(1)
     # es = Elasticsearch(['http://elastic:changeme@elasticsearch:9200'])
