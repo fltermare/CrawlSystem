@@ -52,7 +52,6 @@ for param in [url_param, domain_param]:
 #     scroll_id = scroll_id,
 #     scroll = '3s', # time value for search
 # )
-
 # print ('scroll() query length:', len(res))
 
 res = helpers.scan(
@@ -72,7 +71,7 @@ for num, doc in enumerate(data):
 print("\nscan() scroll length:", len(data))
 
 
-# update document
+# Update document
 updated_body = {
     "doc": {
         "content": "content_9698.com/9699/9700_5566neverdie",
@@ -81,6 +80,27 @@ updated_body = {
 }
 
 es.update(index="index-2020-09-09", id="thwNcXQB6YV2zoLgOMzW", doc_type="_doc", body=updated_body)
+
+# Query and Update
+updated_body2 = {
+    "doc": {
+        "new": "new_column"
+    }
+}
+
+res = helpers.scan(
+    es,
+    query=match_all_param,
+    scroll="3m",
+    size=1000,
+    index="index-2020-09-10",
+)
+
+doc_ids = [doc['_id'] for num, doc in enumerate(res)]
+print("\nscan() scroll length:", len(doc_ids))
+
+for i, doc_id in enumerate(doc_ids):
+    es.update(index="index-2020-09-10", id=doc_id, doc_type='_doc', body=updated_body)
 
 
 # helpers.reindex(
