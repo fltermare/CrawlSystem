@@ -72,6 +72,17 @@ for num, doc in enumerate(data):
 print("\nscan() scroll length:", len(data))
 
 
+# update document
+updated_body = {
+    "doc": {
+        "content": "content_9698.com/9699/9700_5566neverdie",
+        "new": "new_column"
+    }
+}
+
+es.update(index="index-2020-09-09", id="thwNcXQB6YV2zoLgOMzW", doc_type="_doc", body=updated_body)
+
+
 # helpers.reindex(
 #     es,
 #     source_index="index-2020-09-08",
